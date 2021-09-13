@@ -1,0 +1,29 @@
+.search-box{
+    position: absolute;
+    top: 40px;
+    background-color: #FFFFFF;
+    width: 100%;
+    padding-top: 10px;
+    border-radius: 8px;
+}
+.search-flex{
+    display: flex;
+    padding-bottom: 15px;
+}
+.search-img{
+    width: 30px;
+}
+.search-text{
+    display: flex;
+    align-items: center;
+    margin-left: 15px;
+    font-size: 16px;
+    margin-bottom: 0px;
+}
+.mapDisplay{
+    height: 400px;
+}
+.ErrorMes{
+    padding: 10px !important;
+    font-weight: 600;
+}
