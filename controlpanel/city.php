@@ -2,7 +2,7 @@
     ini_set('display_errors','off');
     include('include/connection.php');
 
-    $pageName = 'City';
+    $pageName = 'Citys';
     $cityActivation = 'active';
     $cityToggle = 'true';
 
