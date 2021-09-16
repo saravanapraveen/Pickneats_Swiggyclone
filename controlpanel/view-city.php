@@ -187,81 +187,34 @@
                                     <div class="widget-header">
                                         <div class="row">
                                             <div class="col-sm-10">
-                                                <h4><a href="view-city.php?city_id=<?php echo $city_id ?>"><?php echo $row1['area_name'] ?></a></h4>
-                                            </div>
-                                            <div class="col-sm-2" style="margin-top: 10px;">
-                                                <div class="dropdown  custom-dropdown">
-                                                    <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>
+                                                <h4>
+                                                    <?php echo $row1['area_name'] ?>
+                                                    <a href="edit-area.php?area_id=<?php echo $login_id ?>">
+                                                        <svg style="width: 28px;height: 28px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 p-1 br-6 mb-1">
+                                                            <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                                        </svg>
                                                     </a>
-
-                                                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuLink-1">
-                                                        <a class="dropdown-item" data-toggle="modal" data-target="#cityModal<?php echo $row['city_id'] ?>">
-                                                            <svg style="width: 28px;height: 28px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 p-1 br-6 mb-1">
-                                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                                            </svg>
-                                                        </a>
-                                                        <form method="post">
-                                                            <div class="modal fade" id="cityModal<?php echo $row['city_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="cityLabel<?php echo $row['city_id'] ?>" aria-hidden="true">
-                                                                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                                                                    <div class="modal-content">
-                                                                        <div class="modal-header">
-                                                                            <h5 class="modal-title" id="cityLabel<?php echo $row['city_id'] ?>">Edit City</h5>
-                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                                <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
-                                                                            </button>
-                                                                        </div>
-                                                                        <div class="modal-body">
-                                                                            <div class="row">
-                                                                                <div class="col-sm-12">
-                                                                                    <label for="name" class="col-form-label">City Name</label>
-                                                                                    <input type="text" name="name" id="name<?php echo $row['city_id'] ?>" class="form-control" placeholder="City Name" autocomplete="off" value="<?php echo $row['city_name'] ?>">
-                                                                                    <input type="hidden" name="city_id" value="<?php echo $row['city_id'] ?>">
-                                                                                </div>
-                                                                            </div>
-                                                                            <div class="row mb-3">
-                                                                                <div class="col-sm-6">
-                                                                                    <label for="latitude" class="col-form-label">Latitude</label>
-                                                                                    <input type="text" name="latitude" id="latitude<?php echo $row['city_id'] ?>" class="form-control" placeholder="Latitude" autocomplete="off" value="<?php echo $row['city_latitude'] ?>">
-                                                                                </div>
-                                                                                <div class="col-sm-6">
-                                                                                    <label for="longitude" class="col-form-label">Longitude</label>
-                                                                                    <input type="text" name="longitude" id="longitude<?php echo $row['city_id'] ?>" class="form-control" placeholder="Longitude" autocomplete="off" value="<?php echo $row['city_longitude'] ?>">
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-                                                                        <div class="modal-footer">
-                                                                            <button class="btn" data-dismiss="modal"><i class="flaticon-cancel-12"></i> Discard</button>
-                                                                            <button type="submit" name="edit" class="btn btn-primary" onclick="return cityCheck(<?php echo $row['city_id'] ?>)">Save</button>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </form>
-                                                        <a class="dropdown-item" href="javascript:void(0);">Update</a>
-                                                        <a class="dropdown-item" href="javascript:void(0);">Download</a>
-                                                    </div>
-                                                </div>
+                                                </h4>
+                                            </div>
+                                            <div class="col-sm-2">
+                                                <label class="switch s-icons s-outline s-outline-success mt-3 mb-3 ml-2 float-right" style="margin-bottom: 0px !important">
+                                                    <input type="checkbox" <?php echo $status ?> id="status<?php echo $city_id ?>" onclick="return cityStatus(<?php echo $city_id ?>)">
+                                                    <span class="slider round"></span>
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="widget widget-one">
-                                        <div class="row mb-3">
-                                            <div class="col-sm-4">
-                                                <a href="shop.php?city_id=<?php echo $city_id ?>&area_id=<?php echo $login_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important;margin: 0px !important;">
+                                        <div class="row mb-3" style="justify-content: space-around">
+                                            <div class="col-sm-6">
+                                                <a href="shop.php?city_id=<?php echo $city_id ?>&area_id=<?php echo $login_id ?>" class="btn btn-primary mt-3 mb-3 ml-2">
                                                     Shops <span class="badge badge-light ml-2"><?php echo $shop ?></span>
                                                 </a>
                                             </div>
                                             <div class="col-sm-6">
-                                                <a href="city-service.php?city_id=<?php echo $city_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important;margin: 0px !important;">
+                                                <a href="delivery-partner.php?city_id=<?php echo $city_id ?>&area_id=<?php echo $login_id ?>" class="btn btn-primary mt-3 mb-3 ml-2">
                                                     Delivery Boys <span class="badge badge-light ml-2"><?php echo $deliveryPartner ?></span>
                                                 </a>
-                                            </div>
-                                            <div class="col-sm-2">
-                                                <label class="switch s-icons s-outline s-outline-success mt-1 mb-3 ml-2 float-right" style="margin-bottom: 0px !important">
-                                                    <input type="checkbox" <?php echo $status ?> id="status<?php echo $city_id ?>" onclick="return cityStatus(<?php echo $city_id ?>)">
-                                                    <span class="slider round"></span>
-                                                </label>
                                             </div>
                                         </div>
                                         <div class="w-chart">

@@ -171,14 +171,14 @@
                                             <div class="widget-header">
                                                 <div class="row">
                                                     <div class="col-sm-10">
-                                                        <h4><a href="view-city.php?city_id=<?php echo $city_id ?>"><?php echo $row['city_name'] ?></a></h4>
-                                                    </div>
-                                                    <div class="col-sm-2" style="margin-top: 10px;">
-                                                        <a data-toggle="modal" data-target="#cityModal<?php echo $row['city_id'] ?>">
-                                                            <svg style="width: 28px;height: 28px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 p-1 br-6 mb-1">
-                                                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
-                                                            </svg>
-                                                        </a>
+                                                        <h4>
+                                                            <a href="view-city.php?city_id=<?php echo $city_id ?>"><?php echo $row['city_name'] ?></a>
+                                                            <a data-toggle="modal" data-target="#cityModal<?php echo $row['city_id'] ?>">
+                                                                <svg style="width: 28px;height: 28px" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-edit-2 p-1 br-6 mb-1">
+                                                                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                                                                </svg>
+                                                            </a>
+                                                        </h4>
                                                         <form method="post">
                                                             <div class="modal fade" id="cityModal<?php echo $row['city_id'] ?>" tabindex="-1" role="dialog" aria-labelledby="cityLabel<?php echo $row['city_id'] ?>" aria-hidden="true">
                                                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
@@ -217,25 +217,25 @@
                                                             </div>
                                                         </form>
                                                     </div>
-                                                </div>
-                                            </div>
-                                            <div class="widget widget-one">
-                                                <div class="row">
-                                                    <div class="col-sm-4">
-                                                        <a href="view-city.php?city_id=<?php echo $city_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important">
-                                                            Areas <span class="badge badge-light ml-2"><?php echo $area ?></span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-5">
-                                                        <a href="city-service.php?city_id=<?php echo $city_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important">
-                                                            Services <span class="badge badge-light ml-2"><?php echo $service ?></span>
-                                                        </a>
-                                                    </div>
-                                                    <div class="col-sm-3">
+                                                    <div class="col-sm-2" style="margin-top: 10px;">
                                                         <label class="switch s-icons s-outline s-outline-success mt-3 mb-3 ml-2 float-right" style="margin-bottom: 0px !important">
                                                             <input type="checkbox" <?php echo $status ?> id="status<?php echo $city_id ?>" onclick="return cityStatus(<?php echo $city_id ?>)">
                                                             <span class="slider round"></span>
                                                         </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="widget widget-one">
+                                                <div class="row">
+                                                    <div class="col-sm-6 text-center">
+                                                        <a href="view-city.php?city_id=<?php echo $city_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important">
+                                                            Areas <span class="badge badge-light ml-2"><?php echo $area ?></span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-sm-6 text-center">
+                                                        <a href="city-service.php?city_id=<?php echo $city_id ?>" class="btn btn-primary mt-3 mb-3 ml-2" style="padding: 5px !important">
+                                                            Services <span class="badge badge-light ml-2"><?php echo $service ?></span>
+                                                        </a>
                                                     </div>
                                                 </div>
                                                 <div class="w-chart">

@@ -435,7 +435,7 @@ select.form-control.form-custom {
   vertical-align: middle; }
 
 .btn {
-  padding: 0.4375rem 1.25rem;
+  padding: 0.4375rem 0.5rem;
   text-shadow: none;
   font-size: 14px;
   color: #3b3f5c;
