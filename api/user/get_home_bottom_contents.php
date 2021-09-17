@@ -13,7 +13,7 @@
         $popular_brands = $popular_cuisines = $coupons = $combos = array();
 
         // Popular Brnands
-        $sql = "SELECT * FROM login WHERE city_id='1' AND control='2'";
+        $sql = "SELECT * FROM login WHERE city_id='1' AND control='2' AND top_brand='1'";
         $result = $conn->query($sql);
         $i = 0;
         while($row = $result->fetch_assoc()){

@@ -13,7 +13,7 @@
 
         $randomid = mt_rand(1000,9999);
 
-        $msg = "Your login OTP to Signup for The Cake Shop Elite Account is ".$randomid.".";
+        $msg = "Your login OTP to Signup for The Pickneats SwiggyClone Account is ".$randomid.".";
         $msg = urlencode($msg);
 
         $sql = "SELECT * FROM user WHERE user_phone_number='$phone'";
