@@ -2,7 +2,7 @@
     include("../../controlpanel/include/connection.php");
     include("../distance_calculator.php");
 
-    $output = array();
+    $output = FALSE;
 
     $data = json_decode(file_get_contents('php://input'));
 
@@ -81,8 +81,6 @@
         $output['GTS']['combos'] = $combos;
     } else{
         http_response_code(400);
-        $output['status'] = FALSE;
-        $output['message'] = 'Bad request';
     }
 
     echo json_encode($output);

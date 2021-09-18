@@ -3,7 +3,7 @@
     include("../distance-calculator.php");
     include("../nearby_contents.php");
 
-    $output = array();
+    $output = FALSE;
 
     $data = json_decode(file_get_contents('php://input'));
 
@@ -11,7 +11,7 @@
         $latitude = $data->latitude;
         $longitude = $data->longitude;
 
-        $banner = $service = $top_picks = $deal_of_the_day = FALSE;
+        $banner = $service = $top_picks = $deal_of_the_day = array();
 
         $city_id = getCity($conn,$latitude,$longitude);
 
@@ -105,8 +105,6 @@
         $output['GTS']['deal_of_the_day'] = $deal_of_the_day;
     } else{
         http_response_code(400);
-        $output['status'] = FALSE;
-        $output['message'] = 'Bad request';
     }
 
     echo json_encode($output);

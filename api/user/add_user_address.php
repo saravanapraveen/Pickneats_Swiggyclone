@@ -34,14 +34,12 @@
             }
         } else{
             http_response_code(404);
-            $output_array['status'] = 'fail';
-            $output_array['message'] = 'No user found';
         }
     } else{
         http_response_code(400);
-        $output_array['status'] = 'fail';
-        $output_array['message'] = 'Bad Request';
     }
 
-    echo json_encode($output_array);
+    if(count($output_array)){
+        echo json_encode($output_array);
+    }
 ?>
