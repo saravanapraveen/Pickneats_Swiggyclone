@@ -2,6 +2,7 @@
     include("../../controlpanel/include/connection.php");
     include("../distance-calculator.php");
     include("../nearby_contents.php");
+    include("../worker/shop.php");
 
     $output = FALSE;
 
@@ -79,10 +80,8 @@
                             if($result2->num_rows > 0){
                                 $deal_of_the_day = TRUE;
                             }
-                            $top_picks[$i]['shop_id'] = (int)$login_id;
-                            $top_picks[$i]['shop_name'] = $row['login_name'];
-                            $top_picks[$i]['shop_image'] = $row1['shop_image'];
-                            $top_picks[$i]['shop_rating'] = (float)$rating;
+
+                            $top_picks[$i] = getShop($conn,$login_id);
 
                             $i++;
                         }

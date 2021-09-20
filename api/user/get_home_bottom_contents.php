@@ -1,6 +1,7 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../distance_calculator.php");
+    include("../distance-calculator.php");
+    include("../worker/shop.php");
 
     $output = FALSE;
 
@@ -13,23 +14,27 @@
         $popular_brands = $popular_cuisines = $coupons = $combos = array();
 
         // Popular Brnands
-        $sql = "SELECT * FROM login WHERE city_id='1' AND control='2' AND top_brand='1'";
+        $sql = "SELECT * FROM login WHERE city_id='1' AND control='2'";
         $result = $conn->query($sql);
         $i = 0;
         while($row = $result->fetch_assoc()){
             $login_id = $row['login_id'];
 
-            $sql1 = "SELECT * FROM shop WHERE login_id='$login_id'";
+            $sql1 = "SELECT * FROM shop WHERE login_id='$login_id' AND top_brand='1'";
             $result1 = $conn->query($sql1);
             if($result1->num_rows > 0){
                 $row1 = $result1->fetch_assoc();
 
-                $popular_brands[$i]['shop_id'] = (int)$row['login_id'];
-                $popular_brands[$i]['shop_name'] = $row['login_name'];
-                $popular_brands[$i]['shop_image'] = $row1['shop_image'];
-                $popular_brands[$i]['shop_rating'] = '4.5';
+                $shop_latitude = $row1['latitude'];
+                $shop_longitude = $row1['longitude'];
 
-                $i++;
+                $km = getDistance($shop_latitude,$shop_longitude,$latitude,$longitude);
+
+                if($km <= $row1['serviceable_range']){
+                    $popular_brands[$i] = getShop($conn,$login_id);
+
+                    $i++;
+                }
             }
         }
 
