@@ -1,6 +1,5 @@
 <?php
     include('../include/connection.php');
-    date_default_timezone_set("Asia/Calcutta");
 
 	$output = array();
 

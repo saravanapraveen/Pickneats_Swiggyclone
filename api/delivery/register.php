@@ -1,6 +1,5 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    date_default_timezone_set("Asia/Calcutta");
     include("../password.php");
     $output_array = array();
 

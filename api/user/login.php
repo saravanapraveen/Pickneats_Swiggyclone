@@ -1,6 +1,5 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    date_default_timezone_set("Asia/Calcutta");
     include("../otp_sender.php");
     $output_array = array();
 
