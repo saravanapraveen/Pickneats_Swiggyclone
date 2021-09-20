@@ -25,7 +25,7 @@
 
                 $km = round(getDistance($shop_latitude,$shop_longitude,$latitude,$longitude),2);
 
-                $output['GTS'] = getShop($conn,$login_id);
+                $output['GTS'] = getShop($conn,$login_id,$km);
 
             } else{
                 http_response_code(404);

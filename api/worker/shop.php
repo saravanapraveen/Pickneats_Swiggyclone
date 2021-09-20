@@ -1,5 +1,5 @@
 <?php
-    function getShop($conn,$login_id){
+    function getShop($conn,$login_id,$km = 0){
         $out = array();
 
         $out['shop_id'] = $login_id;
@@ -19,6 +19,7 @@
         $out['shop_description'] = $row['shop_description'];
         $out['shop_brand'] = (int)$row['top_brand'];
         $out['shop_license'] = $row['license'];
+        $out['shop_distance'] = $km.' Km';
 
         $city_id = $row['city_id'];
         $area_id = $row['area_id'];

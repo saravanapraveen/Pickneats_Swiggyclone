@@ -81,7 +81,7 @@
                                 $deal_of_the_day = TRUE;
                             }
 
-                            $top_picks[$i] = getShop($conn,$login_id);
+                            $top_picks[$i] = getShop($conn,$login_id,$km);
 
                             $i++;
                         }
