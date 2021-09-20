@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../distance-calculator.php");
+    include("../distance_calculator.php");
     $output_array = array();
 
     $data = json_decode(file_get_contents('php://input'));

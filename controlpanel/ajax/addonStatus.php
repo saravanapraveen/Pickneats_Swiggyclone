@@ -1,7 +1,6 @@
 <?php
     include('../include/connection.php');
-    ini_set('display_errors','off');
-    
+
     if(!empty($_POST['addon_id'])){
         $addon_id = $_POST['addon_id'];
         $control_status = $_POST['control_status'];

@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../distance-calculator.php");
+    include("../distance_calculator.php");
     include("../nearby_contents.php");
     include("../worker/shop.php");
 
@@ -99,7 +99,7 @@
         }
 
         $output['GTS']['banner'] = $banner;
-        $output['GTS']['serivce'] = $service;
+        $output['GTS']['service'] = $service;
         $output['GTS']['top_picks'] = $top_picks;
         $output['GTS']['deal_of_the_day'] = $deal_of_the_day;
     } else{

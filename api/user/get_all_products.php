@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    ini_set('display_errors','off');
+    
     $output_array = array();
 
     $data = json_decode(file_get_contents('php://input'));

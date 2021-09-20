@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../distance-calculator.php");
+    include("../distance_calculator.php");
     include("../worker/shop.php");
 
     $output = array();

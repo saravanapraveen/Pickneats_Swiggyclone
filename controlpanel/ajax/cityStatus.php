@@ -1,6 +1,5 @@
 <?php
     include('../include/connection.php');
-    ini_set('display_errors','off');
     
     if(!empty($_POST['city_id'])){
         $city_id = $_POST['city_id'];
