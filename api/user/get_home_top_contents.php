@@ -14,7 +14,7 @@
 
         $banner = $service = $top_picks = $deal_of_the_day = array();
 
-        $city_id = getCity($conn,$latitude,$longitude);
+        $city_id = getNearbyCity($conn,$latitude,$longitude);
 
         // Top and Bottom Banners
         $banner[0]['banner_id'] = 1;

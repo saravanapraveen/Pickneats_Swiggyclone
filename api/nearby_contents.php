@@ -1,5 +1,5 @@
 <?php
-    function getCity($conn,$latitude,$longitude){
+    function getNearbyCity($conn,$latitude,$longitude){
         $city = array();
         $city_id = 0;
 
