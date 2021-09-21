@@ -19,7 +19,7 @@
         while($row = $result->fetch_assoc()){
             $login_id = $row['login_id'];
 
-            $sql1 = "SELECT * FROM shop WHERE login_id='$login_id' AND service_id='1'";
+            $sql1 = "SELECT * FROM shop WHERE login_id='$login_id' AND service_id=1";
             $result1 = $conn->query($sql1);
             if($result1->num_rows > 0){
                 $row1 = $result1->fetch_assoc();
@@ -45,8 +45,6 @@
         }
     } else{
         http_response_code(400);
-        $output['status'] = FALSE;
-        $output['message'] = 'Bad request';
     }
 
     echo json_encode($output);

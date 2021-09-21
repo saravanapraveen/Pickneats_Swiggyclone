@@ -1,7 +1,7 @@
 <?php
     include("../../controlpanel/include/connection.php");
     include("../otp_sender.php");
-    $output_array = array();
+    $output = array();
 
     $data = json_decode(file_get_contents('php://input'));
 
@@ -42,20 +42,16 @@
                 $row = $result->fetch_assoc();
 
                 http_response_code(200);
-                $output_array['status'] = 'success';
-                $output_array['message'] = 'OK';
-                $output_array['user_id'] = $row["user_id"];
+                $output['user_id'] = $row["user_id"];
             } else{
                 http_response_code(402);
-                $output_array['status'] = 'fail';
-                $output_array['message'] = 'Unable to send OTP';        
             }
         }
     } else{
         http_response_code(400);
-        $output_array['status'] = 'fail';
-        $output_array['message'] = 'Bad Request';
     }
 
-    echo json_encode($output_array);
+    if(count($output)){
+        echo json_encode($output);
+    }
 ?>

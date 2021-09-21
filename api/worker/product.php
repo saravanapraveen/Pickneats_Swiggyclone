@@ -7,14 +7,21 @@
         $result = $conn->query($sql);
         $row = $result->fetch_assoc();
 
+        $login_id = $row['login_id'];
+
+        $sql1 = "SELECT * FROM login WHERE login_id='$login_id'";
+        $result1 = $conn->query($sql1);
+        $row1 = $result1->fetch_assoc();
+
         $out['product_id'] = (int)$product_id;
         $out['product_name'] = $row['product_name'];
         $out['product_image'] = $row['product_image'];
         $out['product_type'] = (int)$row['product_type'];
         $out['product_description'] = $row['product_description'];
         $out['product_recommended'] = (int)$row['product_recommended'];
-        $out['shop_id'] = (int)$row['login_id'];
         $out['category'] = getCategory($conn,$row['category_id']);
+        $out['shop_id'] = (int)$row['login_id'];
+        $out['shop_name'] = $row1['login_name'];
         $out['product_price'] = getProductVariation($conn,$product_id);
         $out['product_addon'] = getProductAddon($conn,$product_id);
 

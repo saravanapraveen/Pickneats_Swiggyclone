@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    $output_array = array();
+    $output = array();
 
     $data = json_decode(file_get_contents('php://input'));
 
@@ -18,32 +18,26 @@
                 $i = 0;
                 while($row = $result->fetch_assoc()){
                     http_response_code(200);
-                    $output_array['GTS'][$i]['offer_id'] = $row['offer_id'];
-                    $output_array['GTS'][$i]['offer_coupon'] = $row['offer_coupon_code'];
-                    $output_array['GTS'][$i]['offer_percentage'] = $row['percentage'];
-                    $output_array['GTS'][$i]['minimum_ordering_amount'] = $row['minimum_order_amount'];
-                    $output_array['GTS'][$i]['maximum_discount_amount'] = $row['maximum_discount_amount'];
-                    $output_array['GTS'][$i]['falt_amount'] = $row['falt_amount'];
-                    $output_array['GTS'][$i]['for_shop'] = $row['for_shop'];
+                    $output['GTS'][$i]['offer_id'] = $row['offer_id'];
+                    $output['GTS'][$i]['offer_coupon'] = $row['offer_coupon_code'];
+                    $output['GTS'][$i]['offer_percentage'] = $row['percentage'];
+                    $output['GTS'][$i]['minimum_ordering_amount'] = $row['minimum_order_amount'];
+                    $output['GTS'][$i]['maximum_discount_amount'] = $row['maximum_discount_amount'];
+                    $output['GTS'][$i]['falt_amount'] = $row['falt_amount'];
+                    $output['GTS'][$i]['for_shop'] = $row['for_shop'];
                     $i++;
                 }
-                $output_array['status'] = 'success';
-                $output_array['message'] = 'Ok';
             } else{
                 http_response_code(404);
-                $output_array['status'] = 'fail';
-                $output_array['message'] = 'Coupon not found';
             }
         } else{
             http_response_code(404);
-            $output_array['status'] = 'fail';
-            $output_array['message'] = 'No user found';
         }
     } else{
         http_response_code(400);
-        $output_array['status'] = 'fail';
-        $output_array['message'] = 'Bad Request';
     }
 
-    echo json_encode($output_array);
+    if(count($output)){
+        echo json_encode($output);
+    }
 ?>

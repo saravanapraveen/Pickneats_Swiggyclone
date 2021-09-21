@@ -1,7 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
     include("../otp_sender.php");
-    $output_array = array();
 
     $data = json_decode(file_get_contents('php://input'));
 
@@ -16,23 +15,13 @@
             
             if(($row['user_otp'] == $otp) || ('1234' == $otp)){
                 http_response_code(200);
-                $output_array['status'] = 'success';
-                $output_array['message'] = 'Ok';
             } else{
                 http_response_code(403);
-                $output_array['status'] = 'fail';
-                $output_array['message'] = 'Invalid OTP';    
             }
         } else{
             http_response_code(404);
-            $output_array['status'] = 'fail';
-            $output_array['message'] = 'No user found';
         }
     } else{
         http_response_code(400);
-        $output_array['status'] = 'fail';
-        $output_array['message'] = 'Bad Request';
     }
-
-    echo json_encode($output_array);
 ?>

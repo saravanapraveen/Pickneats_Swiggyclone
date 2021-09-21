@@ -1,6 +1,7 @@
 <?php
     include("../../controlpanel/include/connection.php");
     include("../distance_calculator.php");
+    include("../worker/shop.php");
 
     $output = array();
 
@@ -31,30 +32,7 @@
                 $km = round(getDistance($shop_latitude,$shop_longitude,$latitude,$longitude),2);
 
                 if($km <= $row1['serviceable_range']){
-                    $rating = 0;
-
-                    $sql2 = "SELECT * FROM order_rating WHERE shop_id='$login_id'";
-                    $result2 = $conn->query($sql2);
-                    if($result2->num_rows > 0){
-                        while($row2 = $result2->fetch_assoc()){
-                            $rating += $row2['rating_value'];
-                        }
-                    }
-
-                    $sql2 = "SELECT * FROM area WHERE login_id='$area_id'";
-                    $result2 = $conn->query($sql2);
-                    if($result2->num_rows > 0){
-                        $row2 = $result2->fetch_assoc();
-                    }
-
-                    $nearby_shops[$i]['shop_id'] = (int)$row['login_id'];
-                    $nearby_shops[$i]['shop_name'] = $row['login_name'];
-                    $nearby_shops[$i]['shop_description'] = 'Continental, North Indian';
-                    $nearby_shops[$i]['shop_image'] = $row1['shop_image'];
-                    $nearby_shops[$i]['area_name'] = $row2['area_name'];
-                    $nearby_shops[$i]['distance'] = $km.'Km';
-                    $nearby_shops[$i]['shop_rating'] = $rating;
-                    $nearby_shops[$i]['offer'] = '50% off upto $100';
+                    $nearby_shops[$i] = getShop($conn,$login_id,$km);
 
                     $i++;
                 }
@@ -68,9 +46,9 @@
         }
     } else{
         http_response_code(400);
-        $output['status'] = FALSE;
-        $output['message'] = 'Bad request';
     }
     
-    echo json_encode($output);
+    if(count($output)){
+        echo json_encode($output);
+    }
 ?>

@@ -1,6 +1,6 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../worker/category.php");
+    include("../worker/product.php");
     $output = array();
 
     $data = json_decode(file_get_contents('php://input'));
@@ -8,17 +8,23 @@
     if(!empty($data->shop_id)){
         $shop_id = $data->shop_id;
 
-        $sql = "SELECT * FROM category WHERE login_id='$shop_id' AND category_status='1' ORDER BY category_arrangement ASC";
+        $sql = "SELECT * FROM product WHERE login_id='$shop_id' AND product_recommended=1 ORDER BY product_name ASC";
         $result = $conn->query($sql);
         if($result->num_rows > 0){
             $i = 0;
             while($row = $result->fetch_assoc()){
-                $category_id = $row['category_id'];
+                $product_id = $row['product_id'];
+                
+                $output['GTS'][$i] = getProduct($conn,$product_id);
 
-                $output['GTS'][$i] = getCategory($conn,$category_id);
                 $i++;
             }
-            http_response_code(200);
+
+            if($i > 0){
+                http_response_code(200);
+            } else{
+                http_response_code(404);
+            }
         } else{
             http_response_code(404);
         }
