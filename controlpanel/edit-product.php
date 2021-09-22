@@ -174,10 +174,10 @@
                                     <div class="row mb-3">
                                         <div class="col-sm-4">
                                             <label for="timing">Timing</label>
-                                            <select name="timing[]" id="timing" class="form-control selectpicker" data-live-search="true">
+                                            <select name="timing[]" id="timing" class="form-control selectpicker" data-live-search="true" multiple data-live-search="true" title="Select Timing" data-selected-text-format="count" displayName="timings">
                                                 <option value="">Select Timing</option>
                                                 <?php
-                                                    $sql = "SELECT * FROM timing WHERE login_id='$login_id'";
+                                                    $sql = "SELECT * FROM timing ORDER BY intime ASC";
                                                     $result = $conn->query($sql);
                                                     while($row = $result->fetch_assoc())
                                                     {
@@ -198,7 +198,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label for="addon">Add-On</label>
-                                            <select name="addon[]" id="addon" class="form-control selectpicker" data-live-search="true">
+                                            <select name="addon[]" id="addon" class="form-control selectpicker" data-live-search="true" multiple data-live-search="true" title="Select Addon" data-selected-text-format="count" displayName="addons">
                                                 <option value="">Select Addon</option>
                                                 <?php
                                                     $sql = "SELECT * FROM addon WHERE login_id='$login_id'";

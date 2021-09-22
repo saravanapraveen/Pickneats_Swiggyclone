@@ -1,9 +1,9 @@
 <?php
     include('include/connection.php');
 
-    $pageName = 'Service';
-    $serviceActivation = 'active';
-    $serviceToggle = 'true';
+    $pageName = 'Combo';
+    $shopActivation = 'active';
+    $shopToggle = 'true';
 
     $login_id = $_REQUEST['login_id'];
 
@@ -16,7 +16,7 @@
         $sql = "INSERT INTO combos (combo_name,combo_image,combo_price,login_id) VALUES ('$name','$image','$price','$login_id')";
         if($conn->query($sql)==TRUE){
 
-            $sql = "SELECT * FROM combos ORDER BY combo_id LIMIT 1";
+            $sql = "SELECT * FROM combos ORDER BY combo_id DESC LIMIT 1";
             $result = $conn->query($sql);
             $row = $result->fetch_assoc();
 
@@ -27,13 +27,9 @@
                 $product_id = $_POST['products'][$i];
 
                 $sql = "INSERT INTO combo_products (combo_id,combo_product_id) VALUES ('$combo_id','$product_id')";
-                if($conn->query($sql)==TRUE){
-                    header('Location: combos.php?msg=Combo & Combo Products added!');
-                }
+                $conn->query($sql);
             }
-            header('Location: combos.php?msg=Combo added!');
-        }else{
-            header('Location: combos.php?msg=Combo added Failed!');
+            header("Location: combos.php?login_id=$login_id&msg=Combo added!");
         }
     }
 
@@ -53,14 +49,10 @@
                     $product_id = $_POST['products'][$i];
 
                     $sql = "INSERT INTO combo_products (combo_id,combo_product_id) VALUES ('$combo_id','$product_id')";
-                    if($conn->query($sql)==TRUE){
-                        header('Location: combos.php?msg=Combo & Combo Products added!');
-                    }
+                    $conn->query($sql);
                 }
             }
-            header('Location: combos.php?msg=Combos updated!');
-        }else{
-            header("Location: combos.php?msg=Combos Failed!");
+            header("Location: combos.php?login_id=$login_id&msg=Combo updated!");
         }
     }
 
@@ -71,10 +63,9 @@
         if($conn->query($sql)==TRUE){
 
             $sql1 = "DELETE FROM combo_products WHERE combo_id='$combo_id'";
-            $conn->query($sql1);
-            header('Location: combos.php?msg=service deleted!');
-        }else{
-            header('Location: combos.php?msg=service deletion failed!');
+            if($conn->query($sql1) === TRUE){
+                header("Location: combos.php?login_id=$login_id&msg=Combo deleted!");
+            }
         }
     }
 ?>
@@ -84,7 +75,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-    <title>Service | Pickneats</title>
+    <title>Combo | Pickneats</title>
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png"/>
     
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
@@ -151,8 +142,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-6">
                                                                     <label for="name" class="col-form-label">Products</label>
-                                                                    <select name="products[]" id="combo_product" class="form-control selectpicker" multiple data-live-search="true">
-                                                                        <option selected value disabled>Select Products</option>
+                                                                    <select name="products[]" id="combo_product" class="form-control selectpicker" multiple data-live-search="true" title="Select Product" data-selected-text-format="count" displayName="products">
                                                                         <?php
                                                                             $sql = "SELECT * FROM product WHERE product_status='1'";
                                                                             $result = $conn->query($sql);
@@ -196,7 +186,7 @@
                                     </thead>
                                     <tbody>
                                         <?php
-                                            $sql = "SELECT * FROM combos ORDER BY combo_name ASC";
+                                            $sql = "SELECT * FROM combos WHERE login_id='$login_id' ORDER BY combo_name ASC";
                                             $result = $conn->query($sql);
                                             while($row = $result->fetch_assoc()){
                                                 $combo_id = $row['combo_id'];
@@ -204,7 +194,7 @@
                                                 <tr>
                                                     <td><?php echo $row['combo_id'] ?></td>
                                                     <td><a href="shop.php?combo_id=<?php echo $row['combo_id'];?>"><?php echo $row['combo_name'] ?></a></td>
-                                                    <td><img src="<?php echo $row['combo_image'];?>" alt=""></td>
+                                                    <td><img style="width: 200px" src="<?php echo $row['combo_image'];?>" alt=""></td>
                                                     <td>
                                                         <?php
                                                             $sql1 = "SELECT * FROM combo_products WHERE combo_id ='$combo_id'";
@@ -219,12 +209,12 @@
                                                                 $row2 = $result2->fetch_assoc();
 
                                                                 array_push($products, $row2['product_name']);
-                                                                echo $row2['product_name'].',';
+                                                                echo $row2['product_name'].'<br>';
                                                             }
                                                             
                                                         ?>
                                                     </td>
-                                                    <td><?php echo $row['combo_price'];?></td>
+                                                    <td>₹ <?php echo $row['combo_price'];?></td>
                                                     <td>
                                                         <ul class="table-controls">
                                                             <li>
@@ -238,7 +228,7 @@
                                                                         <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
-                                                                                    <h5 class="modal-title" id="cityLabel<?php echo $row['combo_id'] ?>">Edit Service</h5>
+                                                                                    <h5 class="modal-title" id="cityLabel<?php echo $row['combo_id'] ?>">Edit Combo</h5>
                                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                                                     </button>
@@ -247,7 +237,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-sm-6">
                                                                                             <label for="name" class="col-form-label">Combo Name</label>
-                                                                                            <input type="text" name="name" id="combo_name<?php echo $row['combo_id'] ?>" class="form-control" placeholder="Service Name" autocomplete="off" value="<?php echo $row['combo_name'] ?>" onkeyup="editcheckCombo(this.value, <?php echo $row['combo_id'] ?>)">
+                                                                                            <input type="text" name="name" id="combo_name<?php echo $row['combo_id'] ?>" class="form-control" placeholder="Combo Name" autocomplete="off" value="<?php echo $row['combo_name'] ?>" onkeyup="editcheckCombo(this.value, <?php echo $row['combo_id'] ?>)">
                                                                                             <p id="editErrorMsg<?php echo $row['combo_id'] ?>" class="ErrorMes"></p>
                                                                                             <input type="hidden" name="combo_id" value="<?php echo $row['combo_id'] ?>">
                                                                                         </div>
@@ -258,13 +248,13 @@
                                                                                     </div>
                                                                                     <div class="row">
                                                                                         <div class="col-sm-6">
-                                                                                            <select name="products[]" id="combo_product" class="form-control selectpicker" multiple data-live-search="true">
-                                                                                                <option selected value disabled>Select Products</option>
+                                                                                            <select name="products[]" id="combo_product" class="form-control selectpicker" multiple data-live-search="true" title="Select Product" data-selected-text-format="count" displayName="products">
                                                                                                 <?php
                                                                                                     $sql3 = "SELECT * FROM product WHERE product_status='1'";
                                                                                                     $result3 = $conn->query($sql3);
                                                                                                     while($row3 = $result3->fetch_assoc())
                                                                                                     {
+                                                                                                        $selected_combos = '';
                                                                                                         if(in_array($row3['product_name'], $products))
                                                                                                         {
                                                                                                             $selected_combos = "selected";
@@ -302,13 +292,13 @@
                                                                         <div class="modal-dialog modal-dialog-centered" role="document">
                                                                             <div class="modal-content">
                                                                                 <div class="modal-header">
-                                                                                    <h5 class="modal-title" id="cityDeleteLabel<?php echo $row['combo_id'] ?>">Delete City</h5>
+                                                                                    <h5 class="modal-title" id="cityDeleteLabel<?php echo $row['combo_id'] ?>">Delete Combo</h5>
                                                                                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                                                         <svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
                                                                                     </button>
                                                                                 </div>
                                                                                 <div class="modal-body">
-                                                                                    <p class="text-center">Are you sure to delete <?php echo $row['city_name'] ?>!</p>
+                                                                                    <p class="text-center">Are you sure to delete <?php echo $row['combo_name'] ?>!</p>
                                                                                     <input type="hidden" name="combo_id" value="<?php echo $row['combo_id'] ?>">
                                                                                 </div>
                                                                                 <div class="modal-footer">

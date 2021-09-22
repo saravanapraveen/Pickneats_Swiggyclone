@@ -8,6 +8,12 @@
 
     $login_id = $_REQUEST['login_id'];
 
+    $sql = "SELECT * FROM shop WHERE login_id='$login_id'";
+    $result = $conn->query($sql);
+    $row = $result->fetch_assoc();
+
+    $service_id = $row['service_id'];
+
     $sql = "SELECT * FROM login WHERE login_id='$login_id'";
     $result = $conn->query($sql);
     $row = $result->fetch_assoc();
@@ -18,8 +24,9 @@
         $image = $_POST['image'];
         $type = $_POST['type'];
         $percentage = $_POST['percentage'];
+        $product_description = $_POST['product_description'];
 
-        $sql = "INSERT INTO product (login_id,product_name,category_id,product_image,product_type,percentage) VALUES ('$login_id','$name','$category_name','$image','$type','$percentage')";
+        $sql = "INSERT INTO product (login_id,service_id,product_name,category_id,product_image,product_type,percentage,product_description) VALUES ('$login_id','$service_id','$name','$category_name','$image','$type','$percentage','$product_description')";
         if($conn->query($sql)==TRUE){
 
             $sql = "SELECT product_id FROM product ORDER BY product_id DESC";
@@ -149,10 +156,9 @@
                                     <div class="row mb-3">
                                         <div class="col-sm-4">
                                             <label for="timing">Timing</label>
-                                            <select name="timing[]" id="timing" class="form-control selectpicker" data-live-search="true">
-                                                <option value="" selected value disabled>Select Timing</option>
+                                            <select name="timing[]" id="timing" class="form-control selectpicker" multiple data-live-search="true" title="Select Timing" data-selected-text-format="count" displayName="timings">
                                                 <?php
-                                                    $sql = "SELECT * FROM timing WHERE login_id='$login_id'";
+                                                    $sql = "SELECT * FROM timing ORDER BY intime ASC";
                                                     $result = $conn->query($sql);
                                                     while($row = $result->fetch_assoc())
                                                     {
@@ -165,8 +171,7 @@
                                         </div>
                                         <div class="col-sm-4">
                                             <label for="addon">Add-On</label>
-                                            <select name="addon[]" id="addon" class="form-control selectpicker" data-live-search="true">
-                                                <option value="" selected value disabled>Select Addon</option>
+                                            <select name="addon[]" id="addon" class="form-control selectpicker" multiple data-live-search="true" title="Select Addon" data-selected-text-format="count" displayName="addons">
                                                 <?php
                                                     $sql = "SELECT * FROM addon WHERE login_id='$login_id'";
                                                     $result = $conn->query($sql);
@@ -184,14 +189,19 @@
                                             <input type="text" name="percentage" class="form-control" placeholder="Percentage" autocomplete="off" required>
                                         </div>
                                     </div>
-
+                                    <div class="row mb-3">
+                                        <div class="col-sm-12">
+                                            <label for="product_description">Product Description</label>
+                                            <textarea name="product_description" id="product_description" placeholder="Product Description" class="form-control"></textarea>
+                                        </div>
+                                    </div>
                                     <div class="form-group" id="duplicate">
                                         <div class="row">
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-4">
                                                 <label for="variation_name">Variation</label>
                                                 <input type="text" name="variation_name[]" id="variation_name" class="form-control" placeholder="Variation Name" autocomplete="off" required>
                                             </div>
-                                            <div class="col-sm-2">
+                                            <div class="col-sm-3">
                                                 <label for="variation_name">Unit</label>
                                                 <select name="unit_name[]" id="unit_name" class="form-control" required>
                                                     <option value="" selected value disabled>Select Unit</option>
@@ -206,20 +216,19 @@
                                                     ?>
                                                 </select>
                                             </div>
-                                            <div class="col-sm-4">
+                                            <div class="col-sm-2">
                                                 <label for="demo_amt">Demo Amount</label>
                                                 <input type="number" name="demo_amt[]" id="demo_amt" class="form-control" placeholder="Demo Amount" autocomplete="off" required>
                                             </div>
-                                            <div class="col-sm-3">
+                                            <div class="col-sm-2">
                                                 <label for="purchasing_amt">Purchasing Amount</label>
                                                 <input type="number" name="purchasing_amt[]" id="purchasing_amt" class="form-control" placeholder="Purchasing Amount" autocomplete="off" required>
                                             </div>
                                             <div class="col-sm-1">
-                                                <button type="button" style="margin-top: 35px;" name="add" id="add" class="btn btn-success">+</button>
+                                                <button type="button" style="margin-top: 35px;" name="add" id="add" class="btn btn-success w-100">+</button>
                                             </div>
                                         </div>
                                     </div>
-                                    
                                     <div class="row">
                                         <div class="col-sm-12 text-center">
                                             <label id="Error" style="color: red"></label>
@@ -271,33 +280,11 @@
             "lengthMenu": [7, 10, 20, 50],
             "pageLength": 7 
         });
-        function showDeliveryType(value){
-            if(value == 0){
-                document.getElementById('displayClass').classList.remove('col-sm-4')
-                document.getElementById('displayClass').classList.add('col-sm-12')
-                document.getElementById('free').style.display = 'none'
-                document.getElementById('amo').style.display = 'none'
-                document.getElementById('per').style.display = 'none'
-            } else{
-                document.getElementById('displayClass').classList.add('col-sm-4')
-                document.getElementById('displayClass').classList.remove('col-sm-12')
-                document.getElementById('free').style.display = 'block'
-                if(value == 1){
-                    document.getElementById('per').style.display = 'block'
-                    document.getElementById('amo').style.display = 'none'
-                } else{
-                    document.getElementById('amo').style.display = 'block'
-                    document.getElementById('per').style.display = 'none'
-                }
-            }
-        }
-    </script>
-    <script>
         var i = 0;
         $('#add').click(function(){
             i++;
             $('#duplicate').append(
-                '<div class="row m-t5" id="duplicate'+ i+'" style="margin-top: 10px;"><div class="col-sm-2"><input type="text" name="variation_name[]" id="variation_name'+ i+'" class="form-control" placeholder="Variation Name" autocomplete="off" required></div><div class="col-sm-2"><select name="unit_name[]" id="unit_name'+ i+'"" class="form-control" required><option value="" selected value disabled>Select Unit</option><?php $sql = 'SELECT * FROM unit ORDER BY unit_name ASC';$result = $conn->query($sql);while($row = $result->fetch_assoc()){ ?><option value="<?php echo $row['unit_id'];?>"><?php echo $row['unit_name'];?></option><?php } ?></select></div><div class="col-sm-4"><input type="number" name="demo_amt[]" id="demo_amt'+ i+'" class="form-control" placeholder="Demo Amount" autocomplete="off" required></div><div class="col-sm-3"><input type="number" name="purchasing_amt[]" id="purchasing_amt'+ i+'" class="form-control" placeholder="Purchasing Amount" autocomplete="off" required></div><div class="col-sm-1"><button type="button" name="remove" class="btn btn-danger btn_remove" id="'+i+'">X</button></div></div>'
+                '<div class="row m-t5" id="duplicate'+ i+'" style="margin-top: 10px;"><div class="col-sm-4"><input type="text" name="variation_name[]" id="variation_name'+ i+'" class="form-control" placeholder="Variation Name" autocomplete="off" required></div><div class="col-sm-3"><select name="unit_name[]" id="unit_name'+ i+'"" class="form-control" required><option value="" selected value disabled>Select Unit</option><?php $sql = 'SELECT * FROM unit ORDER BY unit_name ASC';$result = $conn->query($sql);while($row = $result->fetch_assoc()){ ?><option value="<?php echo $row['unit_id'];?>"><?php echo $row['unit_name'];?></option><?php } ?></select></div><div class="col-sm-2"><input type="number" name="demo_amt[]" id="demo_amt'+ i+'" class="form-control" placeholder="Demo Amount" autocomplete="off" required></div><div class="col-sm-2"><input type="number" name="purchasing_amt[]" id="purchasing_amt'+ i+'" class="form-control" placeholder="Purchasing Amount" autocomplete="off" required></div><div class="col-sm-1"><button type="button" name="remove" class="btn btn-danger btn_remove w-100" id="'+i+'">X</button></div></div>'
             );
         });
         $(document).on('click', '.btn_remove', function(){  

@@ -15,13 +15,24 @@
     $result = $conn->query($sql);
     $shop = $result->fetch_assoc();
 
+    $area_id = $shop['area_id'];
+    $city_id = $shop['city_id'];
+
+    $sql = "SELECT * FROM city WHERE city_id='$city_id'";
+    $result = $conn->query($sql);
+    $city = $result->fetch_assoc();
+
+    $sql = "SELECT * FROM area WHERE login_id='$area_id'";
+    $result = $conn->query($sql);
+    $area = $result->fetch_assoc();
+
     $sql = "SELECT * FROM category WHERE login_id='$login_id'";
     $result = $conn->query($sql);
     $category = $result->num_rows;
 
-    // $sql = "SELECT * FROM product WHERE login_id='$login_id'";
-    // $result = $conn->query($sql);
-    // $product = $result->num_rows;
+    $sql = "SELECT * FROM product WHERE login_id='$login_id'";
+    $result = $conn->query($sql);
+    $product = $result->num_rows;
 
     $sql = "SELECT * FROM addon WHERE login_id='$login_id'";
     $result = $conn->query($sql);
@@ -50,10 +61,10 @@
     <link href="assets/css/manual.css" rel="stylesheet" type="text/css" />
     <link href="assets/css/elements/avatar.css" rel="stylesheet" type="text/css" />
     <link href="plugins/notification/snackbar/snackbar.min.css" rel="stylesheet" type="text/css" />
-
     <link href="assets/css/users/user-profile.css" rel="stylesheet" type="text/css" />
-
     <link href="assets/css/dashboard/dash_1.css" rel="stylesheet" type="text/css" />
+    <link href="assets/css/elements/breadcrumb.css" rel="stylesheet" type="text/css" />
+
 </head>
 <body class="sidebar-noneoverflow">
     <?php include('include/navbar.php') ?>
@@ -66,6 +77,19 @@
 
         <div id="content" class="main-content">
             <div class="layout-px-spacing">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <nav class="breadcrumb-two mt-4 mb-4" aria-label="breadcrumb">
+                            <ol class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="city.php">City</a></li>
+                                <li class="breadcrumb-item"><a href="view-city.php?city_id=<?php echo $city['city_id'] ?>"><?php echo $city['city_name'] ?></a></li>
+                                <li class="breadcrumb-item"><a href="shop.php?city_id=<?php echo $city['city_id'] ?>&area_id=<?php echo $area['login_id'] ?>"><?php echo $area['area_name'] ?></a></li>
+                                <li class="breadcrumb-item active" aria-current="page"><a href="javascript:void(0);"><?php echo $login['login_name'] ?></a></li>
+                                <li class="breadcrumb-item" aria-current="page"><a href="javascript:void(0);"><?php echo $login['login_name'] ?> Details</a></li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
                 <div class="row">
                     <div class="col-sm-4">
                         <div class="user-profile layout-spacing">
@@ -109,7 +133,7 @@
                     <div class="col-sm-8">
                         <div class="row layout-top-spacing">
                             <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 col-6 layout-spacing">
-                                <a href="category.php">
+                                <a href="category.php?login_id=<?php echo $login_id;?>"">
                                     <div class="widget widget-card-four">
                                         <div class="widget-content">
                                             <div class="w-header">
@@ -140,7 +164,7 @@
 
                                             <div class="w-content">
                                                 <div class="w-info">
-                                                    <p class="value"><?php echo $category;?><span></p>
+                                                    <p class="value"><?php echo $product ?><span></p>
                                                 </div>
                                             </div>
                                         </div>

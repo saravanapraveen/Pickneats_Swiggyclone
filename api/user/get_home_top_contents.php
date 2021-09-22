@@ -12,7 +12,8 @@
         $latitude = $data->latitude;
         $longitude = $data->longitude;
 
-        $banner = $service = $top_picks = $deal_of_the_day = array();
+        $banner = $service = $top_picks = array();
+        $deal_of_the_day = NULL;
 
         $city_id = getNearbyCity($conn,$latitude,$longitude);
 

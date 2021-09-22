@@ -1,4 +1,5 @@
 <?php
+    include("service.php");
     include("category.php");
     function getProduct($conn,$product_id){
         $out = array();
@@ -19,12 +20,12 @@
         $out['product_type'] = (int)$row['product_type'];
         $out['product_description'] = $row['product_description'];
         $out['product_recommended'] = (int)$row['product_recommended'];
+        $out['service'] = getService($conn,$row['service_id']);
         $out['category'] = getCategory($conn,$row['category_id']);
         $out['shop_id'] = (int)$row['login_id'];
         $out['shop_name'] = $row1['login_name'];
         $out['product_price'] = getProductVariation($conn,$product_id);
         $out['product_addon'] = getProductAddon($conn,$product_id);
-        $out['product_combo'] = getProductCombo($conn,$product_id);
 
         if($row['product_status'] == 1){
             $timingCheck = getProductTiming($conn,$product_id);
@@ -61,24 +62,6 @@
         }
 
         return $out;
-    }
-
-    function getProductCombo($conn,$product_id){
-        $product_combo = 0;
-
-        $sql = "SELECT * FROM combo_products WHERE combo_product_id='$product_id'";
-        $result = $conn->query($sql);
-        while($row = $result->fetch_assoc()){
-            $combo_id = $row['combo_id'];
-
-            $sql1 = "SELECT * FROM combo WHERE combo_id='$combo_id' AND combo_status=1";
-            $result1 = $conn->query($sql1);
-            if($result1->fetch_assoc()){
-                $product_combo = 1;
-            }
-        }
-
-        return $product_combo;
     }
 
     function getProductAddon($conn,$product_id){
