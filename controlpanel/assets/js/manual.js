@@ -21,56 +21,81 @@ window.addEventListener('load', (event) => {
             duration: 5000
         })
     }
-    let login = localStorage.getItem('login_id')
-    if (login == null) {
-        let thisURl = window.location.href
-        let indexRE = new RegExp("index.php").test(thisURl)
-        let forgotPassword = new RegExp("forgot-password.php").test(thisURl)
-        let verification = new RegExp("verification.php").test(thisURl)
-        let changePassword = new RegExp("change-password.php").test(thisURl)
-        if (thisURl.charAt(thisURl.length - 1) != '/') {
-            if (!indexRE && !forgotPassword && !verification && !changePassword) {
-                location.replace('./')
-            }
-        }
-    } else {
-        $.ajax({
-            type: "POST",
-            url: "ajax/sessionSet.php",
-            data: { 'login': login },
-            success: function (data) {
-                if (window.location.href.charAt(window.location.href.length - 1) == '/') {
-                    location.replace('dashboard.php')
-                } else {
-                    if (data == 'false') {
-                        location.reload()
+    let current_token = localStorage.getItem('current_token')
+    let refresh_token = localStorage.getItem('refresh_token')
+    $.ajax({
+        type: "POST",
+        url: "ajax/checkToken.php",
+        data: { 'current_token': current_token,'refresh_token': refresh_token },
+        success: function (data) {
+            let returnOBJ = JSON.parse(data)
+
+            if(returnOBJ.status){
+                if(returnOBJ.current_token){
+                    localStorage.setItem('current_token', returnOBJ.current_token)
+                }
+                let login = returnOBJ.login_id
+
+                $.ajax({
+                    type: "POST",
+                    url: "ajax/sessionSet.php",
+                    data: { 'login': login },
+                    success: function (data) {
+                        if (window.location.href.charAt(window.location.href.length - 1) == '/') {
+                            location.replace('dashboard.php')
+                        } else {
+                            if (data == 'false') {
+                                location.reload()
+                            }
+                        }
+                    }
+                })
+                controlCheck(login).then(responce => {
+                    let output = JSON.parse(responce)
+                    if (output.status) {
+                        if (output.control == 2) {
+                            setInterval(function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "ajax/checkOrder.php",
+                                    data: { 'login': login },
+                                    success: function (data) {
+                                        if (data != 'false') {
+                                            document.getElementById('notificationContent').innerHTML = data
+                                            document.getElementById("audio").play()
+                                            document.getElementById('notificationLink').click()
+                                        }
+                                    }
+                                })
+                            }, 5000)
+                        }
+                    }
+                })
+            } else{
+                let thisURl = window.location.href
+                let forgotPassword = new RegExp("forgot-password.php").test(thisURl)
+                let verification = new RegExp("verification.php").test(thisURl)
+                let changePassword = new RegExp("change-password.php").test(thisURl)
+                if (thisURl.charAt(thisURl.length - 1) != '/') {
+                    if (!forgotPassword && !verification && !changePassword) {
+                        location.replace('./')
                     }
                 }
             }
-        })
-        controlCheck(login).then(responce => {
-            let output = JSON.parse(responce)
-            if (output.status) {
-                if (output.control == 2) {
-                    setInterval(function () {
-                        $.ajax({
-                            type: "POST",
-                            url: "ajax/checkOrder.php",
-                            data: { 'login': login },
-                            success: function (data) {
-                                if (data != 'false') {
-                                    document.getElementById('notificationContent').innerHTML = data
-                                    document.getElementById("audio").play()
-                                    document.getElementById('notificationLink').click()
-                                }
-                            }
-                        })
-                    }, 5000)
-                }
-            }
-        })
-    }
+        }
+    })
 })
+function sessionSet(login_id,check = null){
+    $.ajax({
+        type: "POST",
+        url: "ajax/sessionSet.php",
+        data: { 'login': login_id,'check': check },
+        success: function (data) {
+            
+        }
+    })
+    return true
+}
 function loginCheck(e) {
     e.preventDefault()
     let user = document.getElementById('username')
@@ -92,16 +117,14 @@ function loginCheck(e) {
                 data: { 'username': user.value, 'password': pass.value },
                 success: function (data) {
                     let loginObj = JSON.parse(data)
-                    if (loginObj.status == 'success') {
-                        localStorage.setItem('login_id', loginObj.login_id)
-                        $.ajax({
-                            type: "POST",
-                            url: "ajax/sessionSet.php",
-                            data: { 'login': loginObj.login_id },
-                            success: function (data) {
-                                location.replace('dashboard.php')
-                            }
-                        })
+                    if (loginObj.status) {
+                        localStorage.setItem('current_token', loginObj.current_token)
+                        localStorage.setItem('refresh_token', loginObj.refresh_token)
+                        if(sessionSet(loginObj.login_id)){
+                            location.replace('dashboard.php');
+                        } else{
+                            console.log(loginObj.login_id);
+                        }
                     } else {
                         if (loginObj.message == 'Incorrect Password!') {
                             document.getElementById('Message').innerHTML = loginObj.message
@@ -127,7 +150,8 @@ function logOut(msg) {
         data: { 'username': 1, },
         success: function (data) {
             if (data == 'success') {
-                localStorage.removeItem('login_id')
+                localStorage.removeItem('current_token')
+                localStorage.removeItem('refresh_token')
                 if (msg != undefined) {
                     location.replace('index.php?msg=' + msg)
                 } else {
@@ -154,16 +178,10 @@ function forgotPassword(e) {
             data: { 'phone': phone.value },
             success: function (data) {
                 let responce = JSON.parse(data)
-                $.ajax({
-                    type: "POST",
-                    url: "ajax/sessionSet.php",
-                    data: { 'login': responce.login_id, 'check': 1 },
-                    success: function (data) {
+                if (responce.status == 'success') {
+                    if(sessionSet(loginObj.login_id,1)){
                         location.replace('verification.php')
                     }
-                })
-                if (responce.status == 'success') {
-
                 } else {
                     msg.innerHTML = responce.message
                 }
@@ -191,14 +209,9 @@ function verifyOTP(e) {
                 let responce = JSON.parse(data)
 
                 if (responce.status == 'success') {
-                    $.ajax({
-                        type: "POST",
-                        url: "ajax/sessionSet.php",
-                        data: { 'login': responce.login_id },
-                        success: function (data) {
-                            location.replace('change-password.php')
-                        }
-                    })
+                    if(sessionSet(loginObj.login_id)){
+                        location.replace('change-password.php')
+                    }
                 } else {
                     otp.style.border = '1px solid red'
                     shake(otp)

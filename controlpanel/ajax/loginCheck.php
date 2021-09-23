@@ -1,6 +1,7 @@
 <?php
     include('../include/connection.php');
 	include("../../api/password.php");
+	include("../../api/jwt.php");
 
 	$output = array();
 
@@ -14,8 +15,13 @@
 			$row = $result->fetch_assoc();
 
 			if(checkPass($conn,$row['password'],$row['cipher'],$password)){
-				$output['status'] = 'success';
-				$output['login_id'] = $row["login_id"];
+				$login_id = $row["login_id"];
+
+				$tokens = create_token($conn,$login_id);
+				$output['status'] = TRUE;
+				$output['login_id'] = $login_id;
+				$output['current_token'] = $tokens['current_token'];
+				$output['refresh_token'] = $tokens['refresh_token'];
 			} else{
 				$output['status'] = 'fail';
 				$output['message'] = 'Incorrect Password!';
