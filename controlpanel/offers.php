@@ -5,8 +5,6 @@
     $offerActivation = 'active';
     $offerToggle = 'true';
 
-    $login_id = $_REQUEST['login_id'];
-
     if(isset($_POST['add'])){
 
         $coupon_code = $_POST['coupon_code'];
@@ -14,21 +12,42 @@
         $percentage = $_POST['percentage'];
         $maximum_discount = $_POST['maximum_discount'];
         $falt_amount = $_POST['falt_amount'];
-        $shops = $_POST['shops'];
-        $for_shop = $_POST['for_shop'];
-        $in_app = $_POST['in_app'];
 
-        if($login_city_id == 0){
-            $city = $_POST['city'];
-        }else{
-            $city = $login_city_id;
+        $shopLimit = 0;
+        if(count($_POST['shops'])){
+            $shopLimit = 1;
         }
 
-        $sql = "INSERT INTO offers (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,falt_amount,offer_city,offer_shop,for_shop,offer_inapp_status) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$falt_amount','$city','$shops','$for_shop','$in_app')";
-        if($conn->query($sql)==TRUE){
+        $sql = "INSERT INTO offer (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,falt_amount,offer_shop) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$falt_amount','$shopLimit')";
+        if($conn->query($sql) === TRUE){
+            $sql = "SELECT * FROM offer ORDER BY offer_id DESC LIMIT 1";
+            $result = $conn->query($sql);
+            $row = $result->fetch_assoc();
+
+            $offer_id = $row['offer_id'];
+
+            if($shopLimit){
+                for($i = 0;$i<count($_POST['shops']);$i++){
+                    $login_id = $_POST['shops'][$i];
+
+                    $sql = "SELECT * FROM shop WHERE login_id='$login_id'";
+                    $result = $conn->query($sql);
+                    $row = $result->fetch_assoc();
+
+                    $city_id = $row['city_id'];
+
+                    $sql = "INSERT INTO offer_details (offer_id,city_id,login_id) VALUES ('$offer_id','$city_id','$login_id')";
+                    $conn->query($sql);
+                }
+            } else{
+                for($i = 0;$i<count($_POST['city']);$i++){
+                    $city_id = $_POST['city'][$i];
+
+                    $sql = "INSERT INTO offer_details (offer_id,city_id) VALUES ('$offer_id','$city_id')";
+                    $conn->query($sql);
+                }
+            }
             header('Location: offers.php?msg=Combo added!');
-        }else{
-            header('Location: offers.php?msg=Combo added Failed!');
         }
     }
 
@@ -44,13 +63,7 @@
         $for_shop = $_POST['for_shop'];
         $in_app = $_POST['in_app'];
 
-        if($login_city_id == 0){
-            $city = $_POST['city'];
-        }else{
-            $city = $login_city_id;
-        }
-
-        $sql = "UPDATE offers SET offer_coupon_code='$coupon_code',minimum_order_amount='$minimum_order',percentage='$percentage',maximum_discount_amount='$maximum_discount',falt_amount='$falt_amount',offer_city='$city',offer_shop='$shops',for_shop='$for_shop',offer_inapp_status='$in_app' WHERE offer_id='$offer_id'";
+        $sql = "UPDATE offer SET offer_coupon_code='$coupon_code',minimum_order_amount='$minimum_order',percentage='$percentage',maximum_discount_amount='$maximum_discount',falt_amount='$falt_amount',offer_city='$city',offer_shop='$shops',for_shop='$for_shop',offer_inapp_status='$in_app' WHERE offer_id='$offer_id'";
         if($conn->query($sql)==TRUE){
             header('Location: offers.php?msg=Combos updated!');
         }else{
@@ -61,7 +74,7 @@
     if(isset($_POST['delete'])){
         $offer_id = $_POST['offer_id'];
 
-        $sql = "DELETE from offers WHERE offer_id='$offer_id'";
+        $sql = "DELETE from offer WHERE offer_id='$offer_id'";
         if($conn->query($sql)==TRUE){
 
             header('Location: offers.php?msg=Offers deleted!');
@@ -76,7 +89,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
-    <title>Service | Pickneats</title>
+    <title>Offers | Pickneats</title>
     <link rel="icon" type="image/x-icon" href="assets/img/favicon.png"/>
     
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
@@ -96,6 +109,8 @@
     <link rel="stylesheet" href="plugins/font-icons/fontawesome/css/regular.css">
     <link rel="stylesheet" href="plugins/font-icons/fontawesome/css/fontawesome.css">
     <link rel="stylesheet" type="text/css" href="plugins/bootstrap-select/bootstrap-select.min.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/forms/switches.css">
+
 </head>
 <body class="sidebar-noneoverflow">
     <?php include('include/navbar.php') ?>
@@ -114,7 +129,7 @@
                             <div class="widget-header">
                                 <div class="row">
                                     <div class="col-xl-10 col-md-10 col-sm-10 col-10">
-                                        <h4>All Offer's</h4>
+                                        <h4>All Offers</h4>
                                     </div>
                                     <div class="col-xl-2 col-md-2 col-sm-2 col-2">
                                         <a class="btn btn-primary float-right mt-2" data-toggle="modal" data-target="#cityModal">Add New</a>
@@ -132,7 +147,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-6">
                                                                     <label for="name" class="col-form-label">Coupon Code</label>
-                                                                    <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Coupon Code" autocomplete="off" onkeyup="checkOfferName(this.value)">
+                                                                    <input type="text" name="coupon_code" id="coupon_code" class="form-control" placeholder="Coupon Code" autocomplete="off" onkeyup="checkOfferName(this.value)"> 
                                                                     <p id="errorMsg" class="ErrorMes"></p>
                                                                 </div>
                                                                 <div class="col-sm-6">
@@ -158,61 +173,25 @@
                                                                 </div>
                                                             </div>
                                                             <div class="row">
-                                                                <?php
-                                                                    if($login_city_id == 0)
-                                                                    {
-                                                                        ?>
-                                                                            <div class="col-sm-6">
-                                                                                <label for="name" class="col-form-label">City</label>
-                                                                                <select name="city" id="city" class="form-control" onchange="getShops(this.value)">
-                                                                                    <option value="" selected value disabled>Select City</option>
-                                                                                    <option value="All">All</option>
-                                                                                    <?php
-                                                                                        $sql1 = "SELECT * FROM city";
-                                                                                        $result1 = $conn->query($sql1);
-                                                                                        while($row1 = $result1->fetch_assoc())
-                                                                                        {
-                                                                                            ?>
-                                                                                                <option value="<?php echo $row1['city_id'];?>"><?php echo $row1['city_name'];?></option>
-                                                                                            <?php
-                                                                                        }
-                                                                                    ?>
-                                                                                </select>
-                                                                            </div>
-                                                                        <?php
-                                                                    }
-                                                                ?>
                                                                 <div class="col-sm-6">
-                                                                    <label for="name" class="col-form-label">Shops</label>
-                                                                    <select name="shops" id="shops" class="form-control">
-                                                                        <option value="" selected value disabled>Select City</option>
+                                                                    <label for="name" class="col-form-label">City</label>
+                                                                    <select name="city[]" id="city" class="form-control selectpicker" multiple data-live-search="true" title="Select City" data-selected-text-format="count" displayName="cities" onchange="getShops()" data-actions-box="true" required>
                                                                         <?php
-                                                                            if($login_city_id !="0"){
-                                                                                $sql2 = "SELECT * FROM login WHERE BINARY city_id='$login_city_id'";
-                                                                                $result2 = $conn->query($sql2);
-                                                                                while($row2 = $result2->fetch_assoc())
-                                                                                {
-                                                                                    $selected_shop = "";
-
-                                                                                    if($row2['login_id'] == $row['offer_shop'])
-                                                                                    {
-                                                                                        $selected_shop = "selected";
-                                                                                    }
-                                                                                    ?>
-                                                                                        <option value="<?php echo $row2['login_id'];?>" <?php echo $selected_shop;?>><?php echo $row2['login_name'];?></option>
-                                                                                    <?php
-                                                                                }
+                                                                            $sql1 = "SELECT * FROM city";
+                                                                            $result1 = $conn->query($sql1);
+                                                                            while($row1 = $result1->fetch_assoc())
+                                                                            {
+                                                                                ?>
+                                                                                    <option value="<?php echo $row1['city_id'];?>"><?php echo $row1['city_name'];?></option>
+                                                                                <?php
                                                                             }
                                                                         ?>
                                                                     </select>
                                                                 </div>
-                                                            </div>
-                                                            <div class="row mt-2">
-                                                                <div class="col-sm-3">
-                                                                    <input type="checkbox" name="for_shop" id="discount_status" value="1" checked><label for="discount_status" style="margin-left: 10px;">For Shop</label>
-                                                                </div>
-                                                                <div class="col-sm-3">
-                                                                    <input type="checkbox" name="in_app" id="in_app" value="1" checked><label for="in_app" style="margin-left: 10px;">In App</label>
+                                                                <div class="col-sm-6">
+                                                                    <label for="name" class="col-form-label">Shops</label>
+                                                                    <select name="shops[]" id="shops" class="form-control selectpicker" multiple data-live-search="true" title="Select Shop" data-selected-text-format="count" displayName="shops" uniqueId='shopload' data-actions-box="true">
+                                                                    </select>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -244,9 +223,9 @@
                                         <?php
                                         if($control_id == 0)
                                         {
-                                            $sql = "SELECT * FROM offers";
+                                            $sql = "SELECT * FROM offer";
                                         }else{
-                                            $sql = "SELECT * FROM offers WHERE offer_city='$login_city_id'";
+                                            $sql = "SELECT * FROM offer WHERE offer_city='$login_city_id'";
                                         }
                                             $result = $conn->query($sql);
                                             while($row = $result->fetch_assoc()){
@@ -268,7 +247,12 @@
                                                     <td><?php echo $row['minimum_order_amount'];?></td>
                                                     <td><?php echo $row['percentage'];?></td>
                                                     <td><?php echo $row['maximum_discount_amount'];?></td>
-                                                    <td><?php echo $row['falt_amount'];?></td>
+                                                    <td class="no-content">
+                                                        <label class="switch s-icons s-outline s-outline-success mr-2" style="margin-bottom: 0px !important">
+                                                            <input type="checkbox" <?php echo $status ?> id="status<?php echo $product_id ?>" onclick="return productStatus(<?php echo $product_id ?>)">
+                                                            <span class="slider round"></span>
+                                                        </label>
+                                                    </td>
                                                     <td>
                                                         <ul class="table-controls">
                                                             <li>

@@ -1233,7 +1233,6 @@ function editcomboCheck(combo_id) {
 function comboOffer() {
     let coupon_code = document.getElementById('coupon_code')
     let minimum_order = document.getElementById('minimum_order')
-    let city = document.getElementById('city')
 
 
     if (coupon_code.value == "") {
@@ -1248,14 +1247,7 @@ function comboOffer() {
             return false
         } else {
             minimum_order.style.border = '1px solid #bfc9d4'
-            if (city.value == "") {
-                city.style.border = '1px solid red'
-                shake(city)
-                return false
-            } else {
-                city.style.border = '1px solid #bfc9d4'
-                return true
-            }
+            return true
         }
     }
 }
@@ -1347,32 +1339,24 @@ function controlsCheck() {
     }
 }
 
-function getShops(city) {
-    $.ajax({
-        type: "POST",
-        url: "ajax/getCity.php",
-        data: 'city=' + city,
-        beforeSend: function () {
-            $("#shops").addClass("loader")
-        },
-        success: function (data) {
-            $("#shops").html(data)
-            $("#shops").removeClass("loader")
-        }
-    })
-}
+function getShops() {
+    let city = document.getElementById('city').options
+    let cityIDArray = []
 
-function editgetShops(city, id) {
+    for(let i=0;i<city.length;i++){
+        if(city[i].selected){
+            cityIDArray.push(city[i].value)
+        }
+    }
+
     $.ajax({
         type: "POST",
         url: "ajax/getCity.php",
-        data: 'city=' + city,
-        beforeSend: function () {
-            $("#shops" + id).addClass("loader")
-        },
+        data: {'city': cityIDArray},
         success: function (data) {
-            $("#shops" + id).html(data)
-            $("#shops" + id).removeClass("loader")
+            let jsonOut = JSON.parse(data)
+            document.getElementById('shops').innerHTML = jsonOut.inner
+            document.getElementById('shopload').innerHTML = jsonOut.outer
         }
     })
 }
