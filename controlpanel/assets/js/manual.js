@@ -1288,7 +1288,7 @@ function editcheckOfferName(value, offer_id) {
 }
 
 function setFlat() {
-    document.getElementById('falt_amount').value = 0
+    document.getElementById('flat_amount').value = 0
 }
 function setPercentage() {
     document.getElementById('percentage').value = "0"

@@ -50,7 +50,7 @@
                         $output['GTS'][$i]['offer_percentage'] = $row['percentage'];
                         $output['GTS'][$i]['minimum_ordering_amount'] = $row['minimum_order_amount'];
                         $output['GTS'][$i]['maximum_discount_amount'] = $row['maximum_discount_amount'];
-                        $output['GTS'][$i]['falt_amount'] = $row['falt_amount'];
+                        $output['GTS'][$i]['flat_amount'] = $row['flat_amount'];
                         $output['GTS'][$i]['for_shop'] = $row['for_shop'];
                         $i++;
                     }

@@ -19,7 +19,7 @@
         $product = $result1->fetch_assoc();    
        
     }else{
-        header("Location: product.php?msg=Something Wrong");
+        header("Location: product.php?login_id=$login_id");
     }
 
     if(isset($_POST['save'])){
@@ -65,9 +65,7 @@
                 $conn->query($sql);
             }
 
-            header("Location: add-product.php?msg=Updated");
-        }else{
-            header("Location: add-product.php?msg=Failed");
+            header("Location: product.php?login_id=$login_id&msg=Updated");
         }
     }
 ?>

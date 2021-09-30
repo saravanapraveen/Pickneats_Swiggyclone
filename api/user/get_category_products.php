@@ -14,7 +14,7 @@
             $i = 0;
             while($row = $result->fetch_assoc()){
                 $product_id = $row['product_id'];
-                
+
                 $output['GTS'][$i] = getProduct($conn,$product_id);
 
                 $i++;

@@ -11,14 +11,14 @@
         $minimum_order = $_POST['minimum_order'];
         $percentage = $_POST['percentage'];
         $maximum_discount = $_POST['maximum_discount'];
-        $falt_amount = $_POST['falt_amount'];
+        $flat_amount = $_POST['flat_amount'];
 
         $shopLimit = 0;
         if(count($_POST['shops'])){
             $shopLimit = 1;
         }
 
-        $sql = "INSERT INTO offer (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,falt_amount,offer_shop) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$falt_amount','$shopLimit')";
+        $sql = "INSERT INTO offer (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,flat_amount,offer_shop) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$flat_amount','$shopLimit')";
         if($conn->query($sql) === TRUE){
             $sql = "SELECT * FROM offer ORDER BY offer_id DESC LIMIT 1";
             $result = $conn->query($sql);
@@ -57,13 +57,13 @@
         $minimum_order = $_POST['minimum_order'];
         $percentage = $_POST['percentage'];
         $maximum_discount = $_POST['maximum'];
-        $falt_amount = $_POST['falt_amount'];
+        $flat_amount = $_POST['flat_amount'];
         $offer_id = $_POST['offer_id'];
         $shops = $_POST['shops'];
         $for_shop = $_POST['for_shop'];
         $in_app = $_POST['in_app'];
 
-        $sql = "UPDATE offer SET offer_coupon_code='$coupon_code',minimum_order_amount='$minimum_order',percentage='$percentage',maximum_discount_amount='$maximum_discount',falt_amount='$falt_amount',offer_city='$city',offer_shop='$shops',for_shop='$for_shop',offer_inapp_status='$in_app' WHERE offer_id='$offer_id'";
+        $sql = "UPDATE offer SET offer_coupon_code='$coupon_code',minimum_order_amount='$minimum_order',percentage='$percentage',maximum_discount_amount='$maximum_discount',flat_amount='$flat_amount',offer_city='$city',offer_shop='$shops',for_shop='$for_shop',offer_inapp_status='$in_app' WHERE offer_id='$offer_id'";
         if($conn->query($sql)==TRUE){
             header('Location: offers.php?msg=Combos updated!');
         }else{
@@ -169,7 +169,7 @@
                                                             <div class="row">
                                                                 <div class="col-sm-12">
                                                                     <label for="name" class="col-form-label">Falt Amount</label>
-                                                                    <input type="text" name="falt_amount" id="falt_amount" class="form-control" placeholder="Falt Amount" autocomplete="off" onkeyup="setPercentage()">
+                                                                    <input type="text" name="flat_amount" id="flat_amount" class="form-control" placeholder="Falt Amount" autocomplete="off" onkeyup="setPercentage()">
                                                                 </div>
                                                             </div>
                                                             <div class="row">
@@ -297,7 +297,7 @@
                                                                                     <div class="row">
                                                                                         <div class="col-sm-12">
                                                                                             <label for="name" class="col-form-label">Falt Amount</label>
-                                                                                            <input type="text" name="falt_amount" id="falt_amount<?php echo $row['offer_id'] ?>" class="form-control" placeholder="Coupon Code" autocomplete="off" value="<?php echo $row['falt_amount'] ?>">
+                                                                                            <input type="text" name="flat_amount" id="flat_amount<?php echo $row['offer_id'] ?>" class="form-control" placeholder="Coupon Code" autocomplete="off" value="<?php echo $row['flat_amount'] ?>">
                                                                                             <input type="hidden" name="offer_id" value="<?php echo $row['offer_id'] ?>">
                                                                                         </div>
                                                                                     </div>

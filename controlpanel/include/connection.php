@@ -1,12 +1,12 @@
 <?php
-    ini_set('display_errors','off');
+    // ini_set('display_errors','off');
     date_default_timezone_set("Asia/Calcutta");
     session_start();
 
     $host="localhost"; // Host name 
-    $username="pickneats_swiggyclone"; // Mysql username 
-    $password="G3WE4rTy5$3&1w2"; // Mysql password 
-    $db_name="pickneats_swiggyclone"; // Database name 
+    $username="root"; // Mysql username 
+    $password=""; // Mysql password 
+    $db_name="pickneats"; // Database name 
     $conn = mysqli_connect("$host", "$username", "$password")or die("cannot connect"); 
     mysqli_select_db($conn,"$db_name")or die("cannot select DB");
 
