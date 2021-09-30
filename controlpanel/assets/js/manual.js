@@ -28,6 +28,7 @@ window.addEventListener('load', (event) => {
         url: "ajax/checkToken.php",
         data: { 'current_token': current_token,'refresh_token': refresh_token },
         success: function (data) {
+            console.log(data);
             let returnOBJ = JSON.parse(data)
 
             if(returnOBJ.status){

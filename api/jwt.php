@@ -52,7 +52,6 @@
             $res['data'] = (array) $decoded;
         } catch (Exception $e) {
             $res['status'] = 0;
-            $res['content'] = $decoded;
             $res['data'] = $e->getMessage();
         }
         return $res;

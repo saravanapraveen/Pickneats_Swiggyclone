@@ -15,6 +15,9 @@
         if($result->num_rows > 0){
             $row = $result->fetch_assoc();
 
+            $packing_charge = $row['packing_charge'];
+            $tax = $row['tax'];
+
             $shop_latitude = $row['latitude'];
             $shop_longitude = $row['longitude'];
             $delivery_charge = $row['delivery_charge'];
@@ -26,9 +29,10 @@
             $row1 = $result1->fetch_assoc();
 
             $maximum_distance = $row1['maximum_distance'];
+
+            $distance = getDistance($latitude,$longitude,$shop_latitude,$shop_longitude);
             
             if($distance <= $maximum_distance){
-                $distance = getDistance($latitude,$longitude,$shop_latitude,$shop_longitude);
                 if($distance <= $minimum_distance){
                     $output['delivery_charge'] = (int)$delivery_charge;
                 }else{
@@ -36,6 +40,8 @@
                     $delivery_charge = ($extra_distance * $increment) + $delivery_charge;
                     $output['delivery_charge'] = (int)$delivery_charge;
                 }
+                $output['tax'] = (int)$tax;
+                $output['packing_charge'] = (int)$packing_charge;
             } else{
                 http_response_code(403);
             }

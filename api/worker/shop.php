@@ -54,6 +54,27 @@
         return $out;
     }
 
+    function getShopTiming($conn,$login_id){
+        $out = array();
+
+        $sql = "SELECT * FROM shop WHERE login_id='$login_id'";
+        $result = $conn->query($sql);
+        $row = $result->fetch_assoc();
+
+        $currentTime = strtotime(date('h:i A'));
+
+        $openTime = strtotime($row['open_time']);
+        $closeTime = strtotime($row['close_time']);
+
+        if(($openTime <= $currentTime) && ($closeTime >= $currentTime)){
+            $out['shop_status'] = TRUE;
+        } else{
+            $out['shop_status'] = FALSE;
+        }
+
+        return $out;
+    }
+
     function getShopCombo($conn,$login_id){
         $shop_combo = 0;
 

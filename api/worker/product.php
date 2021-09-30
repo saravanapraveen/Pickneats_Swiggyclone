@@ -73,15 +73,17 @@
         while($row = $result->fetch_assoc()){
             $addon_id = $row['addon_id'];
 
-            $sql1 = "SELECT * FROM addon WHERE addon_id='$addon_id'";
+            $sql1 = "SELECT * FROM addon WHERE addon_id='$addon_id' AND addon_status=1";
             $result1 = $conn->query($sql1);
-            $row1 = $result1->fetch_assoc();
+            if($result1->num_rows){
+                $row1 = $result1->fetch_assoc();
 
-            $out[$i]['addon_id'] = (int)$row1['addon_id'];
-            $out[$i]['addon_name'] = $row1['addon_name'];
-            $out[$i]['addon_price'] = (int)$row1['addon_price'];
+                $out[$i]['addon_id'] = (int)$row1['addon_id'];
+                $out[$i]['addon_name'] = $row1['addon_name'];
+                $out[$i]['addon_price'] = (int)$row1['addon_price'];
 
-            $i++;
+                $i++;
+            }
         }
 
         return $out;
