@@ -11,6 +11,7 @@
     if(!empty($data->latitude) && !empty($data->longitude)){
         $latitude = $data->latitude;
         $longitude = $data->longitude;
+        $user_id = $data->user_id;
 
         $banner = $service = $top_picks = array();
         $deal_of_the_day = NULL;
@@ -82,7 +83,7 @@
                                 $deal_of_the_day = TRUE;
                             }
 
-                            $top_picks[$i] = getShop($conn,$login_id,$km);
+                            $top_picks[$i] = getShop($conn,$login_id,$user_id,$km);
 
                             $i++;
                         }

@@ -1,7 +1,8 @@
 <?php
     include("city.php");
     include("area.php");
-    function getShop($conn,$login_id,$km = 0){
+    include("coupon.php");
+    function getShop($conn,$login_id,$user_id = 0,$km = 0){
         $out = array();
         $currentTime = strtotime(date('h:i A'));
 
@@ -36,6 +37,7 @@
         $out['shop_rating'] = getShopRating($conn,$login_id);
         $out['shop_recommended'] = getShopRecommended($conn,$login_id);
         $out['shop_combo'] = getShopCombo($conn,$login_id);
+        $out['shop_coupon'] = getShopCoupon($conn,$login_id,$city_id,$user_id);
 
         if($shop_status == 1){
             if(($openTime <= $currentTime) && ($closeTime >= $currentTime)){
@@ -49,8 +51,48 @@
             $out['shop_status'] = 0;
             $out['shop_message'] = 'Shop closed';
         }
+        return $out;
+    }
 
-        $out['shop_coupon'] = [];
+    function getShopCoupon($conn,$login_id,$city_id,$user_id){
+        $out = array();
+        $order_count = 0;
+
+        if($user_id){
+            $sql1 = "SELECT * FROM orders WHERE user_id='$user_id' AND order_status>0";
+            $result1 = $conn->query($sql1);
+            $order_count = $result1->num_rows;
+        }
+
+        $i = 0;
+
+        $sql = "SELECT * FROM offer_details WHERE login_id='$login_id' OR login_id=0";
+        $result = $conn->query($sql);
+        while($row = $result->fetch_assoc()){
+            if($row['city_id'] == $city_id){
+                $offer_id = $row['offer_id'];
+                $check = 0;
+
+                $sql1 = "SELECT * FROM offer WHERE offer_id='$offer_id'";
+                $result1 = $conn->query($sql1);
+                $row1 = $result1->fetch_assoc();
+
+                if($row1['first_order_limit']){
+                    if($row1['first_order_limit'] >= $order_count){
+                        $check = 1;
+                    }
+                } else{
+                    $check = 1;
+                }
+
+                if($check){
+                    $out[$i] = getCoupon($conn,$offer_id);
+
+                    $i++;
+                }
+            }
+        }
+        
         return $out;
     }
 

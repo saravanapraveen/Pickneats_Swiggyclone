@@ -28,7 +28,6 @@ window.addEventListener('load', (event) => {
         url: "ajax/checkToken.php",
         data: { 'current_token': current_token,'refresh_token': refresh_token },
         success: function (data) {
-            console.log(data);
             let returnOBJ = JSON.parse(data)
 
             if(returnOBJ.status){
@@ -73,6 +72,8 @@ window.addEventListener('load', (event) => {
                     }
                 })
             } else{
+                localStorage.removeItem('current_token')
+                localStorage.removeItem('refresh_token')
                 let thisURl = window.location.href
                 let forgotPassword = new RegExp("forgot-password.php").test(thisURl)
                 let verification = new RegExp("verification.php").test(thisURl)

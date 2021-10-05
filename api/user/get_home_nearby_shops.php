@@ -10,6 +10,7 @@
     if(!empty($data->latitude) && !empty($data->longitude)){
         $latitude = $data->latitude;
         $longitude = $data->longitude;
+        $user_id = $data->user_id;
 
         $nearby_shops = array();
 
@@ -31,7 +32,7 @@
                 $km = round(getDistance($shop_latitude,$shop_longitude,$latitude,$longitude),2);
 
                 if($km <= $row1['serviceable_range']){
-                    $nearby_shops[$i] = getShop($conn,$login_id,$km);
+                    $nearby_shops[$i] = getShop($conn,$login_id,$user_id,$km);
 
                     $i++;
                 }

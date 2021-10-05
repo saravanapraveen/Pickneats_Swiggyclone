@@ -23,6 +23,7 @@
             $delivery_charge = $row['delivery_charge'];
             $increment = $row['increment'];
             $minimum_distance = $row['minimum_distance'];
+            $minimum_order = $row['minimum_order'];
 
             $sql1 = "SELECT * FROM app_control";
             $result1 = $conn->query($sql1);
@@ -41,6 +42,7 @@
                     $output['delivery_charge'] = (int)$delivery_charge;
                 }
                 $output['tax'] = (int)$tax;
+                $output['minimum_order'] = (int)$minimum_order;
                 $output['packing_charge'] = (int)$packing_charge;
             } else{
                 http_response_code(403);

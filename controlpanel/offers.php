@@ -12,13 +12,14 @@
         $percentage = $_POST['percentage'];
         $maximum_discount = $_POST['maximum_discount'];
         $flat_amount = $_POST['flat_amount'];
+        $terms = $_POST['terms'];
 
         $shopLimit = 0;
         if(count($_POST['shops'])){
             $shopLimit = 1;
         }
 
-        $sql = "INSERT INTO offer (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,flat_amount,offer_shop) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$flat_amount','$shopLimit')";
+        $sql = "INSERT INTO offer (offer_coupon_code,minimum_order_amount,percentage,maximum_discount_amount,flat_amount,offer_shop,terms) VALUES ('$coupon_code','$minimum_order','$percentage','$maximum_discount','$flat_amount','$shopLimit','$terms')";
         if($conn->query($sql) === TRUE){
             $sql = "SELECT * FROM offer ORDER BY offer_id DESC LIMIT 1";
             $result = $conn->query($sql);
@@ -170,6 +171,12 @@
                                                                 <div class="col-sm-12">
                                                                     <label for="name" class="col-form-label">Falt Amount</label>
                                                                     <input type="text" name="flat_amount" id="flat_amount" class="form-control" placeholder="Falt Amount" autocomplete="off" onkeyup="setPercentage()">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row mt-3">
+                                                                <div class="col-sm-12">
+                                                                    <label for="terms" class="col-form-label">Instructions</label>
+                                                                    <textarea name="terms" id="terms" style="resize: none" class="form-control" placeholder="Instructions"></textarea>
                                                                 </div>
                                                             </div>
                                                             <div class="row">

@@ -104,7 +104,7 @@
 
             $login_id = $row['login_id'];
 
-            $sql = "UPDATE shop SET city_id='$city',service_id='$service',owner_id='$owner',shop_image='$image',open_time='$opentime',close_time='$closetime',packing_charge='$packingCharge',packing_check='$packingCheck',tax='$tax',tax_check='$taxCheck',latitude='$latitude',longitude='$longitude',license='$license',delivery_charge='$deliveryCharge',minimum_distance='$minimumDistance',increment='$increment',delivery_type='$deliveryType',free_delivery='$free',percentage='$per',amount='$amo' WHERE shop_id='$shop_id'";
+            $sql = "UPDATE shop SET city_id='$city',service_id='$service',owner_id='$owner',shop_image='$image',open_time='$opentime',close_time='$closetime',packing_charge='$packingCharge',packing_check='$packingCheck',tax='$tax',tax_check='$taxCheck',latitude='$latitude',longitude='$longitude',license='$license',delivery_charge='$deliveryCharge',minimum_distance='$minimumDistance',increment='$increment' WHERE shop_id='$shop_id'";
             if($conn->query($sql) === TRUE){
                 header('Location: shop.php?msg=Shop added!');
             }
@@ -316,7 +316,7 @@
                                             <input type="number" min="0" name="increment" id="increment" value="<?php echo $increment;?>" placeholder="Increment per KM" class="form-control" autocomplete="off" required>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <!-- <div class="row mb-3">
                                         <div id="displayClass" class="col-sm-12">
                                             <label for="deliveryType">Delivery Type</label>
                                             <select name="deliveryType" id="deliveryType" class="form-control" onchange="showDeliveryType(this.value)" required>
@@ -348,7 +348,7 @@
                                             <label>Amount</label>
                                             <input type="number" name="amo" class="form-control" value="<?php echo $amount;?>" placeholder="Amount">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
                                         <div class="col-sm-12 text-center">
                                             <label id="Error" style="color: red"></label>

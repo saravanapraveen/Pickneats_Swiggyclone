@@ -10,6 +10,7 @@
         $latitude = $data->latitude;
         $longitude = $data->longitude;
         $service_id = $data->service_id;
+        $user_id = $data->user_id;
         $search_keyword = $data->search_keyword;
 
         $sql = "SELECT * FROM login WHERE control=2 AND login_name LIKE '%$search_keyword%'";
@@ -34,7 +35,7 @@
                     $km = round(getDistance($shop_latitude,$shop_longitude,$latitude,$longitude),2);
 
                     if($km <= $row1['serviceable_range']){
-                        $output['GTS'][$i] = getShop($conn,$login_id,$km);
+                        $output['GTS'][$i] = getShop($conn,$login_id,$user_id,$km);
 
                         $i++;
                     }

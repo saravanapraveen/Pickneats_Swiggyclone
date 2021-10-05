@@ -11,6 +11,7 @@
         $latitude = $data->latitude;
         $longitude = $data->longitude;
         $login_id = $data->shop_id;
+        $user_id = $data->user_id;
 
         $sql = "SELECT * FROM login WHERE login_id='$login_id' AND control=2";
         $result = $conn->query($sql);
@@ -25,7 +26,7 @@
 
                 $km = round(getDistance($shop_latitude,$shop_longitude,$latitude,$longitude),2);
 
-                $output['GTS'] = getShop($conn,$login_id,$km);
+                $output['GTS'] = getShop($conn,$login_id,$user_id,$km);
 
             } else{
                 http_response_code(404);

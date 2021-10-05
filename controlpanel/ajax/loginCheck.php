@@ -6,7 +6,7 @@
 	$output = array();
 
     if(isset($_POST['username'])){
-		$username = $_POST["username"];
+		$username = mysqli_real_escape_string($conn,$_POST["username"]);
 		$password = $_POST["password"];
 
 		$sql = "SELECT * FROM login WHERE BINARY username='$username'";
@@ -23,11 +23,11 @@
 				$output['current_token'] = $tokens['current_token'];
 				$output['refresh_token'] = $tokens['refresh_token'];
 			} else{
-				$output['status'] = 'fail';
+				$output['status'] = FALSE;
 				$output['message'] = 'Incorrect Password!';
 			}
 		} else{
-			$output['status'] = 'fail';
+			$output['status'] = FALSE;
 			$output['message'] = 'Invalid Username!';
 		}
 	}

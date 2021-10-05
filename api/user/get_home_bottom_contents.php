@@ -10,6 +10,7 @@
     if(!empty($data->latitude) && !empty($data->longitude)){
         $latitude = $data->latitude;
         $longitude = $data->longitude;
+        $user_id = $data->user_id;
 
         $popular_brands = $popular_cuisines = $coupons = $combos = array();
 
@@ -31,7 +32,7 @@
                 $km = getDistance($shop_latitude,$shop_longitude,$latitude,$longitude);
 
                 if($km <= $row1['serviceable_range']){
-                    $popular_brands[$i] = getShop($conn,$login_id);
+                    $popular_brands[$i] = getShop($conn,$login_id,$user_id,$km);
 
                     $i++;
                 }

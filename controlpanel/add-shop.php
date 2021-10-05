@@ -53,10 +53,10 @@
         $deliveryCharge = $_POST['deliveryCharge'];
         $minimumDistance = $_POST['minimumDistance'];
         $increment = $_POST['increment'];
-        $deliveryType = $_POST['deliveryType'];
-        $free = $_POST['free'];
-        $per = $_POST['per'];
-        $amo = $_POST['amo'];
+        // $deliveryType = $_POST['deliveryType'];
+        // $free = $_POST['free'];
+        // $per = $_POST['per'];
+        // $amo = $_POST['amo'];
 
         $packingCheck = $taxCheck = 0;
 
@@ -88,7 +88,7 @@
 
                 $login_id = $row['login_id'];
 
-                $sql = "INSERT INTO shop (login_id,city_id,service_id,owner_id,shop_image,open_time,close_time,packing_charge,packing_check,tax,tax_check,latitude,longitude,license,delivery_charge,minimum_distance,increment,delivery_type,free_delivery,percentage,amount) VALUES ('$login_id','$city','$service','$owner','$image','$opentime','$closetime','$packingCharge','$packingCheck','$tax','$taxCheck','$latitude','$longitude','$license','$deliveryCharge','$minimumDistance','$increment','$deliveryType','$free','$per','$amo')";
+                $sql = "INSERT INTO shop (login_id,city_id,service_id,owner_id,shop_image,open_time,close_time,packing_charge,packing_check,tax,tax_check,latitude,longitude,license,delivery_charge,minimum_distance,increment) VALUES ('$login_id','$city','$service','$owner','$image','$opentime','$closetime','$packingCharge','$packingCheck','$tax','$taxCheck','$latitude','$longitude','$license','$deliveryCharge','$minimumDistance','$increment')";
                 if($conn->query($sql) === TRUE){
                     header('Location: shop.php?msg=Shop added!');
                 }
@@ -306,7 +306,7 @@
                                             <input type="number" min="0" name="increment" id="increment" placeholder="Increment per KM" class="form-control" autocomplete="off" required>
                                         </div>
                                     </div>
-                                    <div class="row mb-3">
+                                    <!-- <div class="row mb-3">
                                         <div id="displayClass" class="col-sm-12">
                                             <label for="deliveryType">Delivery Type</label>
                                             <select name="deliveryType" id="deliveryType" class="form-control" onchange="showDeliveryType(this.value)">
@@ -327,7 +327,7 @@
                                             <label>Amount</label>
                                             <input type="number" min="1" name="amo" class="form-control" placeholder="Amount">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
                                         <div class="col-sm-12 text-center">
                                             <label id="Error" style="color: red"></label>

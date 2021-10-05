@@ -42,7 +42,7 @@
                 $row = $result->fetch_assoc();
 
                 http_response_code(200);
-                $output['user_id'] = $row["user_id"];
+                $output['user_id'] = (int)$row["user_id"];
             } else{
                 http_response_code(402);
             }
