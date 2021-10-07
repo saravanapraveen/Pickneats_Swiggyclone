@@ -1,8 +1,8 @@
 <?php
     include("../../controlpanel/include/connection.php");
-    include("../distance_calculator.php");
     include("../worker/shop.php");
     include("../worker/product.php");
+    include("../fcm.php");
     $output = array();
 
     $data = json_decode(file_get_contents('php://input'));
@@ -15,9 +15,21 @@
         $instructions = $data->instructions;
         $os = $data->from;
 
+        if($payment_method != 1){
+            $order_status = 1;
+            $payment_status = 1;
+        } else{
+            $order_status = 2;
+            $payment_status = 2;
+        }
         $sql = "SELECT * FROM user WHERE user_id='$user_id'";
         $result = $conn->query($sql);
         if($result->num_rows){
+            $row = $result->fetch_assoc();
+
+            $user_fcm_token = $row['user_fcm_token'];
+            $user_name = $row['user_name'];
+
             $sql = "SELECT * FROM cart_history WHERE user_id='$user_id' AND cart_history_id='$hash_id'";
             $result = $conn->query($sql);
             if($result->num_rows){
@@ -71,7 +83,7 @@
                 $order_date = date('Y-m-d');
                 $order_time = date('H:i:s');
 
-                $sql = "INSERT INTO orders (order_string,user_id,city_id,area_id,user_address_id,user_address_details,user_latitude,user_longitude,order_date,order_time,delivery_type,total_amount,product_total,addon_total,delivery_charge,packing_charge,tax_amount,tip_amount,offer_id,offer_amount,order_status,payment_status,payment_method,no_contact_deliery,instructions,os,hash) VALUES ('$order_string','$user_id','$city_id','$area_id','$user_address_id','$user_address_details','$user_latitude','$user_longitude','$order_date','$order_time','$delivery_type','$total_amount','$product_total','$addon_total','$delivery_charge','$packing_charge','$tax_amount','$tip_amount','$offer_id','$offer_amount','1','0','$payment_method','$no_contact_deliery','$instructions','$os','$rawData')";
+                $sql = "INSERT INTO orders (order_string,user_id,shop_id,city_id,area_id,user_address_id,user_address_details,user_latitude,user_longitude,order_date,order_time,delivery_type,total_amount,product_total,addon_total,delivery_charge,packing_charge,tax_amount,tip_amount,offer_id,offer_amount,order_status,payment_status,payment_method,no_contact_deliery,instructions,os,hash) VALUES ('$order_string','$user_id','$shop_id','$city_id','$area_id','$user_address_id','$user_address_details','$user_latitude','$user_longitude','$order_date','$order_time','$delivery_type','$total_amount','$product_total','$addon_total','$delivery_charge','$packing_charge','$tax_amount','$tip_amount','$offer_id','$offer_amount','$order_status','$payment_status','$payment_method','$no_contact_deliery','$instructions','$os','$rawData')";
                 if($conn->query($sql) === TRUE){
                     $check = 1;
                     $sql = "SELECT * FROM orders WHERE order_string='$order_string'";
@@ -125,7 +137,7 @@
                                 $addon_price = rtrim($addon_price, ',');
                             }
 
-                            $sql = "INSERT INTO order_detail (order_id,product_id,variation_id,name,product_variation_name,product_price,addon_id,addon_name,addon_price) VALUES ('$order_id','$product_id','$variation_id','$product_name','$product_variation_name','$product_price','$addon_id','$addon_name','$addon_price')";
+                            $sql = "INSERT INTO order_detail (order_id,product_id,variation_id,name,product_variation_name,product_price,quantity,addon_id,addon_name,addon_price) VALUES ('$order_id','$product_id','$variation_id','$product_name','$product_variation_name','$product_price','$quantity','$addon_id','$addon_name','$addon_price')";
                             if($conn->query($sql) !== TRUE){
                                 $check = 0;
                             }
@@ -144,7 +156,7 @@
                             $combo_name = mysqli_real_escape_string($conn,$row['combo_name']);
                             $combo_price = $row['combo_price'];
 
-                            $sql = "INSERT INTO order_detail (order_id,combo_id,name,product_price) VALUES ('$order_id','$combo_id','$combo_name','$combo_price')";
+                            $sql = "INSERT INTO order_detail (order_id,combo_id,name,product_price,quantity) VALUES ('$order_id','$combo_id','$combo_name','$combo_price','$quantity')";
                             if($conn->query($sql) !== TRUE){
                                 $check = 0;
                             }
@@ -152,7 +164,18 @@
                     }
 
                     if($check){
-                        $output['order_id'] = (int)$order_id;
+                        if($payment_method == 1){
+                            $notificationData['title'] = 'Hi '.$user_name;
+                            $notificationData['body'] = 'Your order has been placed';
+                            $notificationData['type'] = 1;
+                            $notificationData['order_id'] = (int)$order_id;
+                            $notificationData['order_status'] = (int)$order_status;
+
+                            $responce = send_fcm($conn,$user_fcm_token,$notificationData);
+                            $output['order_id'] = (int)$order_id;
+                        } else{
+                            $output['order_id'] = (int)$order_id;
+                        }
                     } else{
                         $sql = "DELETE FROM orders WHERE order_id='$order_id'";
                         if($conn->query($sql) === TRUE){
